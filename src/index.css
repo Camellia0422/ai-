@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Outfit', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-[#FFF9F5] text-[#1A1A1A];
+  }
+}
+
+@layer utilities {
+  .anime-shadow {
+    box-shadow: 4px 4px 0px 0px rgba(26, 26, 26, 1);
+  }
+  .anime-shadow-lg {
+    box-shadow: 8px 8px 0px 0px rgba(26, 26, 26, 1);
+  }
+  .anime-shadow-hover:hover {
+    box-shadow: 2px 2px 0px 0px rgba(26, 26, 26, 1);
+    transform: translate(2px, 2px);
+  }
+}

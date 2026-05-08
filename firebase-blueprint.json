@@ -1,0 +1,108 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "role", "createdAt", "updatedAt"]
+    },
+    "Team": {
+      "title": "Team",
+      "description": "Team workspace for collaboration",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "ownerId": { "type": "string" },
+        "members": { "type": "array", "items": { "type": "string" } },
+        "quotaBalance": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "ownerId", "members", "quotaBalance", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "Project container for tasks",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "userId": { "type": "string" },
+        "teamId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "userId", "createdAt"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "Video generation task",
+      "type": "object",
+      "properties": {
+        "taskNo": { "type": "string" },
+        "userId": { "type": "string" },
+        "teamId": { "type": "string" },
+        "projectId": { "type": "string" },
+        "taskType": { "type": "string", "enum": ["text_to_video", "image_to_video", "reference_video"] },
+        "providerId": { "type": "string" },
+        "modelName": { "type": "string" },
+        "prompt": { "type": "string" },
+        "negativePrompt": { "type": "string" },
+        "status": { "type": "string", "enum": ["created", "queued", "validating", "submitted", "processing", "success", "failed", "refunded", "cancelled"] },
+        "progress": { "type": "number" },
+        "estimatedCost": { "type": "number" },
+        "finalCost": { "type": "number" },
+        "errorMessage": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "taskType", "status", "createdAt", "updatedAt"]
+    },
+    "Asset": {
+      "title": "Asset",
+      "description": "Output video or input image asset",
+      "type": "object",
+      "properties": {
+        "taskId": { "type": "string" },
+        "assetType": { "type": "string", "enum": ["input", "output"] },
+        "fileUrl": { "type": "string" },
+        "fileFormat": { "type": "string" },
+        "duration": { "type": "number" },
+        "width": { "type": "number" },
+        "height": { "type": "number" },
+        "fileSize": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["taskId", "assetType", "fileUrl", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "teams/{teamId}": {
+      "schema": "Team",
+      "description": "Team workspaces"
+    },
+    "projects/{projectId}": {
+      "schema": "Project",
+      "description": "Projects"
+    },
+    "tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Generation tasks"
+    },
+    "assets/{assetId}": {
+      "schema": "Asset",
+      "description": "Assets linked to tasks"
+    }
+  }
+}
