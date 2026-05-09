@@ -79,6 +79,36 @@ async function startServer() {
     }
   });
 
+  // Pexels API Proxy for Assets Library
+  app.get("/api/v1/library/search", async (req, res) => {
+    const { query = 'nature', page = 1 } = req.query;
+    const apiKey = process.env.PEXELS_API_KEY;
+
+    if (!apiKey) {
+      // 如果没有 Key，返回一些基础模拟数据以保证 UI 不崩溃
+      return res.json({
+        photos: [],
+        videos: [
+          { id: 1, url: 'https://www.pexels.com/video/853828/', image: 'https://images.pexels.com/videos/853828/free-video-853828.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500', video_files: [{ link: 'https://player.vimeo.com/external/370374665.sd.mp4?s=e76d91f4c77607ea0ba2f483c6bfff0122e23078&profile_id=139&oauth2_token_id=57447761' }] },
+          { id: 2, url: 'https://www.pexels.com/video/853789/', image: 'https://images.pexels.com/videos/853789/free-video-853789.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500', video_files: [{ link: 'https://player.vimeo.com/external/370374020.sd.mp4?s=be722f6d0f8d168538740c0adea285d1f885368a&profile_id=139&oauth2_token_id=57447761' }] }
+        ]
+      });
+    }
+
+    try {
+      const response = await fetch(`https://api.pexels.com/videos/search?query=${query}&per_page=12&page=${page}`, {
+        headers: {
+          'Authorization': apiKey
+        }
+      });
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      console.error("Pexels API Error:", error);
+      res.status(500).json({ error: "Failed to fetch from Pexels" });
+    }
+  });
+
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
     const vite = await createViteServer({
